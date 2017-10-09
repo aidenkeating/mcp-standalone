@@ -10,7 +10,7 @@
           <alerts alerts="alerts"></alerts>
           <div>
             <h1>
-              {{service.name}}
+              {{service.displayName || service.name}}
             </h1>
           </div>
         </div>
@@ -135,7 +135,7 @@
                         </div>
                       </div>
                     </div>
-                    
+
                     <div class="card-pf card-pf-utilization">
                       <div class="card-pf-heading">
                         <p class="card-pf-heading-details">Last 30 readings</p>
