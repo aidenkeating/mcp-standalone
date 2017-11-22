@@ -27,7 +27,7 @@ ui:
 release:
 	git tag -a $(TAG) -m $(TAG)
 	git push aidenkeating $(TAG)
-	goreleaser --rm-dist --extra-config='{ "release": { "github": { "owner": "aidenkeating", "name": "mcp-standalone" } } }'
+	goreleaser --rm-dist --e='{ "release": { "github": { "owner": "aidenkeating", "name": "mcp-standalone" } } }' -e='{ "release": { "prerelease": true }}'
 	docker push docker.io/aidenkeating/mcp-standalone:$(TAG)
 
 build_cli:
