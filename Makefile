@@ -9,6 +9,12 @@ SHELL = /bin/bash
 OSCP = https://192.168.37.1:8443
 NAMESPACE =project2
 TAG=latest
+GITHUB_OWNER=feedhenry
+GITHUB_REPO=mcp-standalone
+REMOTE=origin
+PRERELEASE=false
+DRAFTRELEASE=true
+DOCKERHUB_ORG=feedhenry
 LDFLAGS=-ldflags "-w -s -X main.Version=${TAG}"
 
 .PHONY: check-gofmt
@@ -24,11 +30,11 @@ ui:
 	cd ui && npm install && npm run bower install && npm run grunt build
 
 .PHONY: release
-release:
+release: image
 	git tag -a $(TAG) -m $(TAG)
-	git push aidenkeating $(TAG)
-	goreleaser --rm-dist --e='{ "release": { "github": { "owner": "aidenkeating", "name": "mcp-standalone" } } }' -e='{ "release": { "prerelease": true }}'
-	docker push docker.io/aidenkeating/mcp-standalone:$(TAG)
+	git push $(REMOTE) $(TAG)
+	goreleaser --rm-dist --e='{ "release": { "github": { "owner": "$(GITHUB_OWNER)", "name": "$(GITHUB_REPO)" } } }' -e='{ "release": { "prerelease": $(PRERELEASE), "draft": $(DRAFTRELEASE) }}'
+	docker push docker.io/$(DOCKERHUB_ORG)/mcp-standalone:$(TAG)
 
 build_cli:
 	go build -o mcp ./cmd/mcp-cli
@@ -40,7 +46,7 @@ image: build
 	mkdir -p tmp
 	cp ./mcp-api tmp
 	cp artifacts/Dockerfile tmp
-	cd tmp && docker build -t docker.io/feedhenry/mcp-standalone:$(TAG) .
+	cd tmp && docker build -t docker.io/$(DOCKERHUB_ORG)/mcp-standalone:$(TAG) .
 	rm -rf tmp
 
 run_server:
