@@ -24,11 +24,11 @@ ui:
 	cd ui && npm install && npm run bower install && npm run grunt build
 
 .PHONY: release
-release: image
+release:
 	git tag -a $(TAG) -m $(TAG)
-	git push origin $(TAG)
-	goreleaser --rm-dist
-	docker push docker.io/feedhenry/mcp-standalone:$(TAG)
+	git push aidenkeating $(TAG)
+	goreleaser --rm-dist --extra-config='{ "release": { "github": { "owner": "aidenkeating", "name": "mcp-standalone" } } }'
+	docker push docker.io/aidenkeating/mcp-standalone:$(TAG)
 
 build_cli:
 	go build -o mcp ./cmd/mcp-cli
